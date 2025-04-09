@@ -28,6 +28,21 @@ export default function Home() {
     getApiMessage();
   }, []);
 
+  useEffect(() => {
+    const testCORS = async () => {
+      try {
+        console.log('Testing CORS...');
+        const response = await fetch('http://localhost:5000/api/test-cors');
+        const data = await response.json();
+        console.log('CORS test successful:', data);
+      } catch (err) {
+        console.error('CORS test failed:', err);
+      }
+    };
+    
+    testCORS();
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm">

@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 type RequestOptions = {
   method?: string;
@@ -11,6 +11,8 @@ export async function fetchFromAPI<T>(
   options: RequestOptions = {}
 ): Promise<T> {
   try {
+    console.log(`Making ${options.method || 'GET'} request to ${API_URL}${endpoint}`);
+    
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: options.method || 'GET',
       headers: {
@@ -21,7 +23,8 @@ export async function fetchFromAPI<T>(
     });
     
     if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`API error: ${response.status} - ${errorText}`);
     }
     
     return await response.json() as T;

@@ -8,6 +8,7 @@ interface PlayerData {
   position: string;
   weight: number; // in kg
   height: number; // in cm
+  description: string; // Added description field
 }
 
 // Define props for the component
@@ -23,6 +24,7 @@ export default function PlayerForm({ onSubmit, isLoading = false }: PlayerFormPr
     position: '',
     weight: 80,
     height: 180,
+    description: '', // Initialize description field
   });
 
   // Rugby positions
@@ -32,12 +34,12 @@ export default function PlayerForm({ onSubmit, isLoading = false }: PlayerFormPr
   ];
 
   // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
     setFormData({
       ...formData,
-      [name]: name === 'position' ? value : Number(value),
+      [name]: ['age', 'weight', 'height'].includes(name) ? Number(value) : value,
     });
   };
 
@@ -47,9 +49,12 @@ export default function PlayerForm({ onSubmit, isLoading = false }: PlayerFormPr
     onSubmit(formData);
   };
 
+  // Common input class with black text color
+  const inputClass = "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black";
+
   return (
     <div className="w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Player Information</h2>
+      <h2 className="text-2xl font-bold mb-6 text-black">Player Information</h2>
       
       <form onSubmit={handleSubmit}>
         {/* Age Field */}
@@ -65,7 +70,7 @@ export default function PlayerForm({ onSubmit, isLoading = false }: PlayerFormPr
             max="80"
             value={formData.age}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
             required
           />
         </div>
@@ -80,7 +85,7 @@ export default function PlayerForm({ onSubmit, isLoading = false }: PlayerFormPr
             name="position"
             value={formData.position}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
             required
           >
             <option value="" disabled>Select a position</option>
@@ -106,13 +111,13 @@ export default function PlayerForm({ onSubmit, isLoading = false }: PlayerFormPr
             step="0.1"
             value={formData.weight}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
             required
           />
         </div>
         
         {/* Height Field */}
-        <div className="mb-6">
+        <div className="mb-4">
           <label htmlFor="height" className="block text-gray-700 font-medium mb-2">
             Height (cm)
           </label>
@@ -124,8 +129,24 @@ export default function PlayerForm({ onSubmit, isLoading = false }: PlayerFormPr
             max="220"
             value={formData.height}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
             required
+          />
+        </div>
+        
+        {/* Description Field */}
+        <div className="mb-6">
+          <label htmlFor="description" className="block text-gray-700 font-medium mb-2">
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            rows={4}
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Enter player description, skills, experience, etc."
+            className={inputClass}
           />
         </div>
         
